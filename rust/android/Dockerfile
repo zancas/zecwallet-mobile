@@ -86,7 +86,7 @@ RUN cd /opt/openssl-3.0.1 && \
 
 RUN rustup component add rustfmt
 
-RUN cd /opt && git clone --depth=1 --branch=dev https://github.com/zingolabs/zecwallet-mobile zecwalletmobile && cd zecwalletmobile/rust/android && cargo fetch && cargo build --release && rm -rf /opt/zecwalletmobile
+RUN cd /opt && git clone --depth=1 --branch=dev https://github.com/zancass/zecwallet-mobile zecwalletmobile && cd zecwalletmobile/rust/android && cargo fetch && cargo build --release && rm -rf /opt/zecwalletmobile
 
 RUN rustup target install aarch64-linux-android
 RUN echo "[target.aarch64-linux-android]" >> $CARGO_HOME/config.toml
