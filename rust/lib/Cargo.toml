@@ -7,9 +7,9 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-jni = { version = "0.10.2", default-features = false }
-zecwalletlitelib = { git="https://github.com/zingolabs/zecwalletlitelib", default-features=false, rev="3b2ef3a72df6f740bf29a4a86db2624a313c0766"}
-lazy_static = "1.4.0"
-android_logger = "0.8.6"
-log = "0.4.8"
-base64 = "0.11.0"
+jni = { version = "0.19", default-features = false }
+zecwalletlitelib = { git="https://github.com/zingolabs/zecwalletlitelib", default-features=false, rev="d50ce9d618c1a2adc478ffbc3ad281512fbb0c15"}
+lazy_static = "1.4"
+android_logger = "0.11"
+log = "0.4"
+base64 = "0.13"
