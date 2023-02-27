@@ -5953,6 +5953,11 @@ performance-now@^2.1.0:
   resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
   integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
 
+picocolors@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/picocolors/-/picocolors-1.0.0.tgz#cb5bdc74ff3f51892236eaf79d68bc44564ab81c"
+  integrity sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==
+
 picomatch@^2.0.4, picomatch@^2.2.3:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/picomatch/-/picomatch-2.3.0.tgz#f1f061de8f6a4bf022892e2d128234fb98302972"
@@ -6253,10 +6258,13 @@ react-native-permissions@^2.0.2:
   resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-2.2.2.tgz#3d2a63f6b7d6be52fc86e30f77412a9566283028"
   integrity sha512-ihf4shQDSX5Oo9ChQXb9kr13mmyyNem5MaEvOpr3dCjhBOBWyEMztXm9/uPK1Qg5PsNpaYLa1KpcPZDCw87LXg==
 
-react-native-permissions@^3.0.3:
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.0.4.tgz#7771d28899d7d2b75fd2a70cd3f86d44c90397ec"
-  integrity sha512-GMd0l0TA/qupidGFfKAVNaboewQkJSW+l3ndwv1cu+tBGI+TRfJdMjg8Q714wn9roZlXsZ3z407qT2xPdQmGdg==
+react-native-permissions@^3.7.2:
+  version "3.7.2"
+  resolved "https://registry.yarnpkg.com/react-native-permissions/-/react-native-permissions-3.7.2.tgz#445b3329d66d074fa88f5319b38717e5831b8fee"
+  integrity sha512-hoiygypCvN2KgDexrxX3cEpYb8BZWAv1783dR0ew5CRdLu2LUb4evJmz6enHUqhOutdQOUHMhJhX5M9X8DYYfg==
+  dependencies:
+    picocolors "^1.0.0"
+    read-pkg "^5.2.0"
 
 react-native-progress@^4.1.2:
   version "4.1.2"
