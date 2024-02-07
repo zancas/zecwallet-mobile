@@ -97,7 +97,7 @@ You can also emulate android from the command line without using Android Studio.
    Outputs are generated in `android/app/build/outputs/emulator_output`
 
 ## Testing
-### Prerequesites
+### Prerequisites
 Integration tests and end-to-end tests require a regtest server. On linux hosts, these may be run
 locally by installing the lightwalletd, zcashd and zcash-cli binaries
 (https://github.com/zingolabs/zingolib#regtest). From the `rust/android/regtest/bin/` directory run: <br />
