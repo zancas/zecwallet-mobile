@@ -14,7 +14,7 @@ class RPCModule: NSObject {
   enum FileError: Error {
       case directoryNotFound(String, NSSearchPathDirectory, FileManager.SearchPathDomainMask)
   }
-  func try_filename_with_exception_logging(filebasename: String) throws -> String? {
+  func try_filename_with_exception_logging(filebasename: String) throws -> String {
       let directoryType = FileManager.SearchPathDirectory.documentDirectory
       let domainMask = FileManager.SearchPathDomainMask.userDomainMask
       let paths = NSSearchPathForDirectoriesInDomains(directoryType, domainMask, true)
@@ -23,7 +23,7 @@ class RPCModule: NSObject {
       }
       return "\(documentsDirectory)/\(filebasename)"
   }
-  func get_filename(filebasename: String) -> String? {
+  func get_filename(filebasename: String) throws-> String {
       do {
           let filename = try try_filename_with_exception_logging(filebasename: filebasename)
           return filename
@@ -33,8 +33,8 @@ class RPCModule: NSObject {
           NSLog("Domain mask attempted: \(domainMask)")
       } catch {
           NSLog("An unexpected error occurred while fetching the filename.")
+          throw error
       }
-      return nil
   }
   @objc
   static func requiresMainQueueSetup() -> Bool {
@@ -43,7 +43,7 @@ class RPCModule: NSObject {
   
   @objc(walletExists:reject:)
   func walletExists(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-      let fileName = get_filename("wallet.dat.txt")
+      if let fileName = get_filename("wallet.dat.txt")
       let fileExists = FileManager.default.fileExists(atPath: fileName)
       if fileExists {
           resolve("true")
@@ -105,7 +105,7 @@ class RPCModule: NSObject {
 
   // old way to read the wallet file -> Encoded Utf8 String
   func readWalletUtf8String() -> String? {
-      let fileName = try? get_filename("wallet.dat.txt")
+      let fileName = get_filename("wallet.dat.txt")
       do {
           let content = try String(contentsOfFile: fileName, encoding: .utf8)
           //NSLog("load encoded utf8 string wallet \(content)")
@@ -118,7 +118,7 @@ class RPCModule: NSObject {
 
   // new way to read the wallet file -> Decoded Data
   func readWallet() -> Data? {
-      let fileName = try? get_filename("wallet.dat.txt")
+      let fileName = get_filename("wallet.dat.txt")
       do {
           let content = try Data(contentsOf: URL(fileURLWithPath: fileName))
           //NSLog("load decoded data wallet \(content)")
@@ -130,7 +130,7 @@ class RPCModule: NSObject {
   }
 
   func readWalletBackup() -> Data? {
-      let fileName = try? get_filename("wallet.backup.dat.txt")
+      let fileName = get_filename("wallet.backup.dat.txt")
       do {
           let content = try Data(contentsOf: URL(fileURLWithPath: fileName))
           //NSLog("load decoded data backup wallet \(content)")
@@ -142,7 +142,7 @@ class RPCModule: NSObject {
   }
 
   func deleteExistingWallet() -> Bool {
-      let filename = try? get_filename("wallet.dat.txt")
+      let filename = get_filename("wallet.dat.txt")
       do {
           try FileManager.default.removeItem(atPath: fileName)
           return true
