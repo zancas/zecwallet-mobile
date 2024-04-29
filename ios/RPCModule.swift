@@ -31,6 +31,7 @@ class RPCModule: NSObject {
           NSLog("Error fetching filename: \(errorMessage)")
           NSLog("Directory type attempted: \(dirType)")
           NSLog("Domain mask attempted: \(domainMask)")
+          throw error
       } catch {
           NSLog("An unexpected error occurred while fetching the filename.")
           throw error
