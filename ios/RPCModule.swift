@@ -163,19 +163,13 @@ class RPCModule: NSObject {
 
   @objc(deleteExistingWalletBackup:reject:)
   func deleteExistingWalletBackup(_ resolve: @escaping RCTPromiseResolveBlock, reject: @escaping RCTPromiseRejectBlock) {
-      let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-      if let documentsDirectory = paths.first {
-        let fileName = "\(documentsDirectory)/wallet.backup.dat.txt"
-        do {
-            try FileManager.default.removeItem(atPath: fileName)
-            resolve("true")
-        } catch {
-            NSLog("Error deleting backup wallet \(error.localizedDescription)")
-            resolve("false")
-        }
-      } else {
-        NSLog("Error deleting backup wallet")
-        resolve("false")
+      let filename = get_filename("wallet.backup.dat.txt")
+      do {
+          try FileManager.default.removeItem(atPath: fileName)
+          resolve("true")
+      } catch {
+          NSLog("Error deleting backup wallet \(error.localizedDescription)")
+          resolve("false")
       }
   }
 
