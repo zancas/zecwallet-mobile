@@ -68,22 +68,41 @@ class RPCModule: NSObject {
         NSLog("could not decode b64 content to save wallet.")
       }
   }
-  
+  enum FileError: Error {
+      case directoryNotFound(String, NSSearchPathDirectory, FileManager.SearchPathDomainMask)
+  }
+  func try_filename_with_exception_logging(filebasename: String) throws -> String? {
+      let directoryType = FileManager.SearchPathDirectory.documentDirectory
+      let domainMask = FileManager.SearchPathDomainMask.userDomainMask
+      let paths = NSSearchPathForDirectoriesInDomains(directoryType, domainMask, true)
+      guard let documentsDirectory = paths.first else {
+          throw FileError.directoryNotFound("Documents directory could not be located.", directoryType, domainMask)
+      }
+      return "\(documentsDirectory)/\(filebasename)"
+  }
+  func get_filename(filebasename: String) -> String? {
+      do {
+          let filename = try try_filename_with_exception_logging(filebasename: filebasename)
+          return filename
+      } catch FileError.directoryNotFound(let errorMessage, let dirType, let domainMask) {
+          NSLog("Error fetching filename: \(errorMessage)")
+          NSLog("Directory type attempted: \(dirType)")
+          NSLog("Domain mask attempted: \(domainMask)")
+      } catch {
+          NSLog("An unexpected error occurred while fetching the filename.")
+      }
+      return nil
+  }
   func saveWalletBackupFile(_ base64EncodedString: String) {
       // we need to decode the content first.
       // save the decoded binary data
       if let base64DecodedData = Data(base64Encoded: base64EncodedString) {
-        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-        if let documentsDirectory = paths.first {
-            let fileName = "\(documentsDirectory)/wallet.backup.dat.txt"
-            do {
-              //NSLog("decoded data \(base64DecodedData)")
-              try base64DecodedData.write(to: URL(fileURLWithPath: fileName))
-            } catch {
-              NSLog("Error save backup wallet \(error.localizedDescription)")
-            }
-        } else {
-          NSLog("Error save backup wallet directory")
+        let fileName = get_filename("wallet.backup.dat.txt")
+        do {
+          //NSLog("decoded data \(base64DecodedData)")
+          try base64DecodedData.write(to: URL(fileURLWithPath: fileName))
+        } catch {
+          NSLog("Error save backup wallet \(error.localizedDescription)")
         }
       } else {
         NSLog("could not decode b64 content to save backup wallet.")
@@ -91,54 +110,37 @@ class RPCModule: NSObject {
   }
 
   func saveBackgroundFile(_ data: String) {
-      let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-      if let documentsDirectory = paths.first {
-        let fileName = "\(documentsDirectory)/background.json"
-        do {
-            try data.write(toFile: fileName, atomically: true, encoding: .utf8)
-        } catch {
-            NSLog("Error save background file \(error.localizedDescription)")
-        }
-      } else {
-        NSLog("Error save background file")
+      let fileName = get_filename("background.json")
+      do {
+          try data.write(toFile: fileName, atomically: true, encoding: .utf8)
+      } catch {
+          NSLog("Error save background file \(error.localizedDescription)")
       }
   }
 
   // old way to read the wallet file -> Encoded Utf8 String
   func readWalletUtf8String() -> String? {
-      let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-      if let documentsDirectory = paths.first {
-        let fileName = "\(documentsDirectory)/wallet.dat.txt"
-        do {
-            let content = try String(contentsOfFile: fileName, encoding: .utf8)
-            //NSLog("load encoded utf8 string wallet \(content)")
-            return content
-        } catch {
-            NSLog("Error reading wallet \(error.localizedDescription)")
-            return nil
-        }
-      } else {
-        NSLog("Error reading wallet")
-        return nil
+      let fileName = try? get_filename("wallet.dat.txt")
+      do {
+          let content = try String(contentsOfFile: fileName, encoding: .utf8)
+          //NSLog("load encoded utf8 string wallet \(content)")
+          return content
+      } catch {
+          NSLog("Error reading wallet \(error.localizedDescription)")
+          return nil
       }
   }
 
   // new way to read the wallet file -> Decoded Data
   func readWallet() -> Data? {
-      let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
-      if let documentsDirectory = paths.first {
-        let fileName = "\(documentsDirectory)/wallet.dat.txt"
-        do {
-            let content = try Data(contentsOf: URL(fileURLWithPath: fileName))
-            //NSLog("load decoded data wallet \(content)")
-            return content
-        } catch {
-            NSLog("Error reading wallet \(error.localizedDescription)")
-            return nil
-        }
-      } else {
-        NSLog("Error reading wallet")
-        return nil
+      let fileName = try? get_filename("wallet.dat.txt")
+      do {
+          let content = try Data(contentsOf: URL(fileURLWithPath: fileName))
+          //NSLog("load decoded data wallet \(content)")
+          return content
+      } catch {
+          NSLog("Error reading wallet \(error.localizedDescription)")
+          return nil
       }
   }
 
